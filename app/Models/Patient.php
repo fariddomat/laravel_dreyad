@@ -11,12 +11,19 @@ class Patient extends Model
     protected $fillable = [
         'file_number',
         'name',
-        'phone',
-        'birth_date',
+        'gender',
+        'mob1',
+        'mob2',
+        'date_contacted',
         'source',
-        'status',
-        'clinic',
-        'notes',
+        'level',
+        'notes'
     ];
+
+
+    public function medical_records()
+    {
+        return $this->hasMany(MedicalRecord::class);
+    }
 
 }

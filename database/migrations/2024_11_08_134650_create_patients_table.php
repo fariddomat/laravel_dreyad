@@ -12,17 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('patients', function (Blueprint $table) {
-
-            $table->id(); // رقم معرف فريد لكل مريض
+            $table->id();
             $table->string('file_number')->unique(); // رقم الملف
             $table->string('name'); // اسم المريض
-            $table->string('phone')->nullable(); // رقم الجوال
-            $table->date('birth_date')->nullable(); // تاريخ الميلاد
-            $table->string('source')->nullable(); // المصدر (مثال: محول، صلاح، إلخ)
-            $table->string('status')->default('مجدول مسبقاً'); // حالة الحضور (حضر، لم يحضر، إلخ)
-            $table->string('clinic')->nullable(); // العيادة التي حضرها
+            $table->enum('gender', ['male', 'female']); // الجنس
+            $table->string('mob1')->nullable(); // رقم الجوال الأول
+            $table->string('mob2')->nullable(); // رقم الجوال الثاني
+            $table->date('date_contacted')->nullable(); // تاريخ التواصل
+            $table->string('source')->nullable(); // المصدر
+            $table->enum('level', ['junk', 'vip', 'normal'])->default('normal'); // مستوى المريض
             $table->text('notes')->nullable(); // ملاحظات
-            $table->timestamps(); // تاريخ الإنشاء والتحديث
+            $table->timestamps();
         });
     }
 

@@ -5,10 +5,11 @@
                 <div class="card my-4">
                     <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
                         <div class="row bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
-                            <h6 class="col-6 text-white text-capitalize ps-3">قائمة المرضى</h6>
+                            <h6 class="col-6 text-white text-capitalize ps-3">قائمة السجلات الطبية</h6>
                             <div class="col-6 text-end">
-                                <a class="btn bg-gradient-dark mb-0" href="{{ route('dashboard.patients.create') }}">
-                                    <i class="material-icons text-sm">add</i>&nbsp;&nbsp;إضافة مريض
+                                <a class="btn bg-gradient-dark mb-0"
+                                    href="{{ route('dashboard.medical_records.create') }}">
+                                    <i class="material-icons text-sm">add</i>&nbsp;&nbsp;إضافة سجل طبي
                                 </a>
                             </div>
                         </div>
@@ -19,35 +20,35 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>رقم الملف</th>
                                         <th>اسم المريض</th>
-                                        <th>الجنس</th>
-                                        <th>مستوى المريض</th>
-                                        <th>تاريخ التواصل</th>
+                                        <th>نوع الخدمة</th>
+                                        <th>أرقام الأسنان المعالجة</th>
+                                        <th>عدد الزيارات</th>
+                                        <th>تاريخ بدء العلاج</th>
                                         <th>الإجراءات</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($patients as $patient)
+                                    @foreach ($medicalRecords as $medicalRecord)
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $patient->file_number }}</td>
-                                            <td>{{ $patient->name }}</td>
-                                            <td>{{ $patient->gender == 'male' ? 'ذكر' : 'أنثى' }}</td>
-                                            <td>{{ $patient->level == 'vip' ? 'VIP' : ($patient->level == 'junk' ? 'غير هام' : 'عادي') }}
-                                            </td>
-                                            <td>{{ $patient->date_contacted ?? 'غير محدد' }}</td>
+                                            <td>{{ $medicalRecord->patient->name }}</td>
+                                            <td>{{ $medicalRecord->service }}</td>
+                                            <td>{{ $medicalRecord->teeth_no }}</td>
+                                            <td>{{ $medicalRecord->visits_no }}</td>
+                                            <td>{{ $medicalRecord->date_start }}</td>
 
                                             <td>
-                                                <a href="{{ route('dashboard.patients.show', $patient) }}"
+                                                <a href="{{ route('dashboard.medical_records.show', $medicalRecord) }}"
                                                     class="btn btn-primary text-white">
                                                     <i class="material-icons">visibility</i>
                                                 </a>
-                                                <a href="{{ route('dashboard.patients.edit', $patient) }}"
+                                                <a href="{{ route('dashboard.medical_records.edit', $medicalRecord) }}"
                                                     class="btn btn-success text-white">
                                                     <i class="material-icons">edit</i>
                                                 </a>
-                                                <form action="{{ route('dashboard.patients.destroy', $patient) }}"
+                                                <form
+                                                    action="{{ route('dashboard.medical_records.destroy', $medicalRecord) }}"
                                                     method="POST" style="display: inline;">
                                                     @csrf
                                                     @method('DELETE')
@@ -60,6 +61,8 @@
                                     @endforeach
                                 </tbody>
                             </table>
+
+                            {{ $medicalRecords->links() }}
                         </div>
                     </div>
                 </div>
