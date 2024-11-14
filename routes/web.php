@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Dashboard\MedicalFileController;
 use App\Http\Controllers\Dashboard\MedicalRecordController;
 use App\Http\Controllers\Dashboard\PatientController;
 use App\Http\Controllers\ProfileController;
@@ -33,6 +34,9 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth'])->prefix('dashboard')->name('dashboard.')->group(function () {
 
+    Route::prefix('patients/{patient}')->name('patients.')->group(function () {
+        Route::resource('medical_files', MedicalFileController::class);
+    });
     Route::resource('patients', PatientController::class);
     Route::resource('medical_records', MedicalRecordController::class);
     // suggestion

@@ -6,7 +6,7 @@
             aria-hidden="true" id="iconSidenav"></i>
         <a class="navbar-brand m-0 d-flex text-wrap align-items-center" href=" {{ route('dashboard') }} ">
             <img src="{{ asset('assets') }}/img/logo-ct.png" class="navbar-brand-img h-100" alt="main_logo">
-            <span class="ms-2 font-weight-bold text-white"> Dashboard</span>
+            <span class="ms-2 font-weight-bold text-white"> لوحة التحكم</span>
         </a>
     </div>
     <hr class="horizontal light mt-0 mb-2">
@@ -18,22 +18,32 @@
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="material-icons opacity-10">dashboard</i>
                     </div>
-                    <span class="nav-link-text ms-1">Dashboard</span>
+                    <span class="nav-link-text ms-1">لوحة التحكم</span>
                 </a>
             </li>
 
             <li class="nav-item mt-3">
-                <h6 class="ps-4 ms-2 text-uppercase text-xs text-white font-weight-bolder opacity-8">Users</h6>
+                <h6 class="ps-4 ms-2 text-uppercase text-xs text-white font-weight-bolder opacity-8">العيادة</h6>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link text-white {{ Route::currentRouteName() == 'dashboard.favorites.index' ? ' active bg-gradient-primary' : '' }}"
-                    href="">
+                <a class="nav-link text-white {{ Route::currentRouteName() == 'dashboard.patients.index' ? ' active bg-gradient-primary' : '' }}"
+                    href="{{ route('dashboard.patients.index') }}">
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
 
                         <i class="material-icons opacity-10">bookmark</i>
                     </div>
-                    <span class="nav-link-text ms-1">Favorites</span>
+                    <span class="nav-link-text ms-1">المرضى</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white {{ Route::currentRouteName() == 'dashboard.medical_records.index' ? ' active bg-gradient-primary' : '' }}"
+                    href="{{ route('dashboard.medical_records.index') }}">
+                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+
+                        <i class="material-icons opacity-10">bookmark</i>
+                    </div>
+                    <span class="nav-link-text ms-1">السجلات الطبية</span>
                 </a>
             </li>
 
@@ -42,7 +52,7 @@
 
 
             <li class="nav-item mt-3">
-                <h6 class="ps-4 ms-2 text-uppercase text-xs text-white font-weight-bolder opacity-8">Account pages</h6>
+                <h6 class="ps-4 ms-2 text-uppercase text-xs text-white font-weight-bolder opacity-8">الاعدادات</h6>
             </li>
             <li class="nav-item">
                 <a class="nav-link text-white {{ Route::currentRouteName() == 'profile.edit' ? ' active bg-gradient-primary' : '' }}  "
@@ -50,18 +60,17 @@
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="material-icons opacity-10">person</i>
                     </div>
-                    <span class="nav-link-text ms-1">Profile</span>
+                    <span class="nav-link-text ms-1">الملف الشخصي</span>
                 </a>
             </li>
 
-          
+
         </ul>
     </div>
     <div class="sidenav-footer position-absolute w-100 bottom-0 ">
 
         <div class="mx-3">
-            <a class="btn bg-gradient-primary w-100" href="http://127.0.0.1:3000" target="_blank" type="button">Home
-                Page</a>
+            <a class="btn bg-gradient-primary w-100" href="/" target="_blank" type="button">الرئيسية</a>
         </div>
     </div>
 </aside>

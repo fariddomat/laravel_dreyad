@@ -13,6 +13,10 @@
                     <p>{{ $patient->file_number }}</p>
                 </div>
                 <div class="mb-3 col-md-6">
+                    <label class="form-label">الملفات الطبية</label>
+                    <p><a href="{{ route('dashboard.patients.medical_files.index', $patient) }}" class="btn btn-primary">الملفات الطبية</a></p>
+                </div>
+                <div class="mb-3 col-md-6">
                     <label class="form-label">اسم المريض</label>
                     <p>{{ $patient->name }}</p>
                 </div>
