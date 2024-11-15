@@ -1,9 +1,11 @@
 <?php
+
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Models\Payment;
 use App\Models\MedicalRecord;
+use App\Models\Patient;
 use Illuminate\Http\Request;
 
 class PaymentController extends Controller
@@ -13,6 +15,20 @@ class PaymentController extends Controller
         $payments = Payment::with('medicalRecord.patient')->get();
         return view('dashboard.payments.index', compact('payments'));
     }
+
+    public function userPayments($patientId)
+    {
+        // Retrieve the patient and their payments through medical records
+        $patient = Patient::findOrFail($patientId);
+
+        // Fetch payments related to the patient's medical records
+        $payments = Payment::whereHas('medicalRecord', function ($query) use ($patientId) {
+            $query->where('patient_id', $patientId);
+        })->latest()->get();
+
+        return view('dashboard.payments.user-payments', compact('patient', 'payments'));
+    }
+
 
     public function create()
     {

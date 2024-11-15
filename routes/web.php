@@ -5,6 +5,7 @@ use App\Http\Controllers\Dashboard\MedicalRecordController;
 use App\Http\Controllers\Dashboard\PatientController;
 use App\Http\Controllers\Dashboard\PaymentController;
 use App\Http\Controllers\Dashboard\ServiceController;
+use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -35,6 +36,10 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware(['auth'])->prefix('dashboard')->name('dashboard.')->group(function () {
+    Route::resource('users', UserController::class);
+});
+
+Route::middleware(['auth'])->prefix('dashboard')->name('dashboard.')->group(function () {
 
     Route::prefix('patients/{patient}')->name('patients.')->group(function () {
         Route::resource('medical_files', MedicalFileController::class);
@@ -42,6 +47,7 @@ Route::middleware(['auth'])->prefix('dashboard')->name('dashboard.')->group(func
     Route::resource('patients', PatientController::class);
     Route::resource('medical_records', MedicalRecordController::class);
     Route::resource('payments', PaymentController::class);
+    Route::get('/payments/user/{id}', [PaymentController::class, 'userPayments'])->name('payments.user');
 
 
     Route::resource('services', ServiceController::class);
