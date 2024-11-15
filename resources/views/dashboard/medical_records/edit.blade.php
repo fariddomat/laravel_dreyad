@@ -25,9 +25,9 @@
                                 <div class="col-12 mt-3">
                                     <label for="service" class="form-label">نوع الخدمة</label>
                                     <select name="service" id="service" class="form-control" required>
-                                        <option value="braces" @if($medicalRecord->service == 'braces') selected @endif>تقويم الأسنان</option>
-                                        <option value="implants" @if($medicalRecord->service == 'implants') selected @endif>زراعة الأسنان</option>
-                                        <option value="filling" @if($medicalRecord->service == 'filling') selected @endif>حشو الأسنان</option>
+                                        @foreach ($services as $service)
+                                        <option value="{{ $service->name }}" @if($medicalRecord->service == $service->name) selected @endif>{{ $service->name }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 <div class="col-12 mt-3">

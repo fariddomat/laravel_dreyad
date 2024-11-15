@@ -3,6 +3,8 @@
 use App\Http\Controllers\Dashboard\MedicalFileController;
 use App\Http\Controllers\Dashboard\MedicalRecordController;
 use App\Http\Controllers\Dashboard\PatientController;
+use App\Http\Controllers\Dashboard\PaymentController;
+use App\Http\Controllers\Dashboard\ServiceController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -39,6 +41,10 @@ Route::middleware(['auth'])->prefix('dashboard')->name('dashboard.')->group(func
     });
     Route::resource('patients', PatientController::class);
     Route::resource('medical_records', MedicalRecordController::class);
+    Route::resource('payments', PaymentController::class);
+
+
+    Route::resource('services', ServiceController::class);
     // suggestion
 });
 

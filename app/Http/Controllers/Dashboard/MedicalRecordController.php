@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Models\MedicalRecord;
 use App\Models\Patient;
+use App\Models\Service;
 use Illuminate\Http\Request;
 
 class MedicalRecordController extends Controller
@@ -17,8 +18,10 @@ class MedicalRecordController extends Controller
 
     public function create()
     {
+
+        $services = Service::all();
         $patients = Patient::all(); // جلب المرضى لإختيار المريض عند إضافة سجل طبي جديد
-        return view('dashboard.medical_records.create', compact('patients'));
+        return view('dashboard.medical_records.create', compact('patients', 'services'));
     }
 
     public function store(Request $request)
@@ -55,8 +58,10 @@ class MedicalRecordController extends Controller
 
     public function edit(MedicalRecord $medicalRecord)
     {
+
+        $services = Service::all();
         $patients = Patient::all(); // جلب المرضى لتعديل السجل الطبي
-        return view('dashboard.medical_records.edit', compact('medicalRecord', 'patients'));
+        return view('dashboard.medical_records.edit', compact('medicalRecord', 'patients', 'services'));
     }
 
     public function update(Request $request, MedicalRecord $medicalRecord)

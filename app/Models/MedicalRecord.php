@@ -14,9 +14,23 @@ class MedicalRecord extends Model
         'outcome', 'financial_status', 'amount_paid', 'notes',
     ];
 
+
+    /**
+     * Define the relationship with Service.
+     */
+    public function serviceDetails()
+    {
+        return $this->belongsTo(Service::class, 'service', 'name');
+    }
+    
     // الربط مع جدول المرضى
     public function patient()
     {
         return $this->belongsTo(Patient::class);
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
     }
 }

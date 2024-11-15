@@ -25,9 +25,9 @@
                                     <label for="service" class="form-label">نوع الخدمة</label>
                                     <select name="service" id="service" class="form-control" required>
                                         <option value="">اختر نوع الخدمة</option>
-                                        <option value="braces">تقويم الأسنان</option>
-                                        <option value="implants">زراعة الأسنان</option>
-                                        <option value="filling">حشو الأسنان</option>
+                                        @foreach ($services as $service)
+                                        <option value="{{ $service->name }}">{{ $service->name }}</option>
+                                        @endforeach
                                         <!-- يمكنك إضافة المزيد من الخيارات هنا -->
                                     </select>
                                 </div>
