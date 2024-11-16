@@ -15,6 +15,17 @@ class MedicalRecordController extends Controller
         $medicalRecords = MedicalRecord::with('patient')->paginate(25);
         return view('dashboard.medical_records.index', compact('medicalRecords'));
     }
+    public function patient($id)
+    {
+
+
+        // Filter medical records by patient ID if provided
+        $medicalRecords = MedicalRecord::where('patient_id', $id)
+            ->paginate(25);
+
+        return view('dashboard.medical_records.index', compact('medicalRecords'));
+    }
+
 
     public function create()
     {

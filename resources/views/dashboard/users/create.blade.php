@@ -14,8 +14,9 @@
                         </div>
                     </div>
                     <div class="card-body px-2 pb-2">
-                        <form action="{{ route('dashboard.users.store') }}" method="POST">
+                        <form action="{{ route('dashboard.users.store') }}" method="POST" enctype="multipart/form-data">
                             @csrf
+                            @include('components.error-alert')
                             <div class="mb-3">
                                 <label for="name" class="form-label">الاسم</label>
                                 <input type="text" class="form-control" id="name" name="name" required>

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\Dashboard\ImportController;
 use App\Http\Controllers\Dashboard\MedicalFileController;
 use App\Http\Controllers\Dashboard\MedicalRecordController;
 use App\Http\Controllers\Dashboard\PatientController;
@@ -43,9 +44,13 @@ Route::middleware(['auth'])->prefix('dashboard')->name('dashboard.')->group(func
     });
     Route::resource('patients', PatientController::class);
     Route::resource('medical_records', MedicalRecordController::class);
+    Route::get('/medical_records/user/{id}', [MedicalRecordController::class, 'patient'])->name('medical_records.user');
+
     Route::resource('payments', PaymentController::class);
     Route::get('/payments/user/{id}', [PaymentController::class, 'userPayments'])->name('payments.user');
 
+    Route::get('/import-patients', [ImportController::class, 'index'])->name('import.patient');
+    Route::post('/import-patients', [ImportController::class, 'importPatients'])->name('import.patients');
 
     Route::resource('services', ServiceController::class);
     // suggestion

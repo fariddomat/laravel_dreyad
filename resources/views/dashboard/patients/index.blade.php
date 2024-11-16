@@ -42,6 +42,9 @@
                                                 <a href="{{ route('dashboard.payments.user', $patient->id) }}" class="btn btn-info text-white">
                                                     <i class="material-icons">payments</i> عرض الدفعات
                                                 </a>
+                                                <a href="{{ route('dashboard.medical_records.user', $patient->id) }}" class="btn btn-info text-white">
+                                                    <i class="material-icons">bookmark</i> السجلات الطبية
+                                                </a>
                                                 <a href="{{ route('dashboard.patients.show', $patient) }}"
                                                     class="btn btn-primary text-white">
                                                     <i class="material-icons">visibility</i>
