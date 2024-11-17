@@ -20,14 +20,14 @@ return new class extends Migration
             $table->date('date_start')->nullable(); // تاريخ بدء العلاج
             $table->date('date_end')->nullable(); // تاريخ انتهاء العلاج
             $table->text('treatment_plan')->nullable(); // خطة العلاج
-            $table->string('status')->default('not_booked'); // الحالة (حضر، مجدول ولم يحضر)
+            $table->string('status')->nullable()->default('not_booked'); // الحالة (حضر، مجدول ولم يحضر)
             $table->decimal('pricing', 10, 2)->nullable(); // التسعير
-            $table->decimal('discount', 5, 2)->default(0); // الخصم
+            $table->decimal('discount', 5, 2)->nullable()->default(0); // الخصم
             $table->decimal('total_cost', 10, 2)->nullable(); // التكلفة الإجمالية
             $table->string('follow_up')->nullable(); // المتابعة
             $table->text('outcome')->nullable(); // النتيجة
-            $table->string('financial_status')->default('overdue'); // الحالة المالية
-            $table->string('amount_paid', 10, 2)->default(0); // المبلغ المدفوع
+            $table->string('financial_status')->nullable()->default('overdue'); // الحالة المالية
+            $table->string('amount_paid', 10, 2)->nullable()->default(0); // المبلغ المدفوع
             $table->text('notes')->nullable(); // الملاحظات
             $table->timestamps();
         });

@@ -12,7 +12,7 @@ class MedicalRecordController extends Controller
 {
     public function index()
     {
-        $medicalRecords = MedicalRecord::with('patient')->paginate(25);
+        $medicalRecords = MedicalRecord::with('patient')->get();
         return view('dashboard.medical_records.index', compact('medicalRecords'));
     }
     public function patient($id)

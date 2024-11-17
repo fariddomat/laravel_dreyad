@@ -23,24 +23,26 @@
     <link href="{{ asset('assets') }}/css/nucleo-svg.css" rel="stylesheet" />
     <style>
         body {
-    direction: rtl;
-}
+            direction: rtl;
+        }
 
-.sidenav {
-    right: 0;
-    left: auto;
-}
+        .sidenav {
+            right: 0;
+            left: auto;
+        }
 
-@media (min-width: 1200px) {
-    .sidenav.fixed-start + .main-content {
-    margin-right: 17.125rem; /* Adjust based on your layout */
-    margin-left: 0 !important;
-}
-    }
-.navbar-brand {
-    flex-direction: row-reverse; /* Make sure logo and text are aligned RTL */
-}
+        @media (min-width: 1200px) {
+            .sidenav.fixed-start+.main-content {
+                margin-right: 17.125rem;
+                /* Adjust based on your layout */
+                margin-left: 0 !important;
+            }
+        }
 
+        .navbar-brand {
+            flex-direction: row-reverse;
+            /* Make sure logo and text are aligned RTL */
+        }
     </style>
     <!-- Font Awesome Icons -->
     <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
@@ -52,13 +54,45 @@
 
     <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
 
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        p,
+        span,
+        a,
+        button,
+        input,
+        textarea {
+            font-family: 'Cairo', sans-serif !important;
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-weight: 700;
+            /* عريض */
+        }
+
+        p,
+        span {
+            font-weight: 400;
+            /* عادي */
+        }
+    </style>
+
     @yield('styles')
 </head>
 
 <body class="g-sidenav-show bg-gray-200 }}">
     @include('components.navbars.sidebar')
     <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg overflow-x-hidden">
-    @include('layouts.navigation')
+        @include('layouts.navigation')
 
 
 
@@ -75,7 +109,8 @@
         <main>
             {{ $slot }}
         </main>
-    </main></body>
+    </main>
+</body>
 
 <script src="{{ asset('assets') }}/js/core/popper.min.js"></script>
 <script src="{{ asset('assets') }}/js/core/bootstrap.min.js"></script>
@@ -90,11 +125,11 @@
         }
         Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
     }
-
 </script>
 <!-- Github buttons -->
 <script async defer src="https://buttons.github.io/buttons.js"></script>
 <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
 <script src="{{ asset('assets') }}/js/material-dashboard.min.js?v=3.0.0"></script>
 @yield('scripts')
+
 </html>
