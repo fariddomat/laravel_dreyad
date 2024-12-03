@@ -33,7 +33,10 @@ class PatientController extends Controller
 
     public function show(Patient $patient)
     {
-        return view('dashboard.patients.show', compact('patient'));
+
+    $medicalRecordsCount = $patient->medical_records->count();
+    $paymentsCount = $patient->medical_records->flatMap->payments->count();
+        return view('dashboard.patients.show', compact('patient', 'medicalRecordsCount', 'paymentsCount'));
     }
 
     public function edit(Patient $patient)

@@ -24,4 +24,28 @@ class Payment extends Model
     {
         return $this->belongsTo(MedicalRecord::class);
     }
+
+    protected static function boot()
+{
+    parent::boot();
+
+    static::created(function ($payment) {
+        $payment->medicalRecord->update([
+            'amount_paid' => $payment->medicalRecord->payments->sum('amount'),
+        ]);
+    });
+
+    static::updated(function ($payment) {
+        $payment->medicalRecord->update([
+            'amount_paid' => $payment->medicalRecord->payments->sum('amount'),
+        ]);
+    });
+
+    static::deleted(function ($payment) {
+        $payment->medicalRecord->update([
+            'amount_paid' => $payment->medicalRecord->payments->sum('amount'),
+        ]);
+    });
+}
+
 }

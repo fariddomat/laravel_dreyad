@@ -30,4 +30,12 @@ class Patient extends Model
         return $this->hasMany(MedicalFile::class);
     }
 
+    public function getTotalAmountPaidAttribute()
+{
+    $medicalRecordsPaid = $this->medical_records->sum('amount_paid');
+    $paymentsPaid = $this->medical_records->flatMap->payments->sum('amount');
+    return $medicalRecordsPaid + $paymentsPaid;
+}
+
+
 }

@@ -84,6 +84,9 @@
             font-weight: 400;
             /* عادي */
         }
+        .bg-gradient-primary {
+  background-image: linear-gradient(195deg, #38fbbb 0%, #561BD8 100%) !important;
+}
     </style>
 
     @yield('styles')
