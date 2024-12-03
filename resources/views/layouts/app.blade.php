@@ -87,6 +87,10 @@
         .bg-gradient-primary {
   background-image: linear-gradient(195deg, #38fbbb 0%, #561BD8 100%) !important;
 }
+.bg-white {
+  --bs-bg-opacity: 1;
+  background-color: rgba(255, 255, 255, 0.55) !important;
+}
     </style>
 
     @yield('styles')
@@ -109,7 +113,7 @@
         @endif
 
         <!-- Page Content -->
-        <main>
+        <main style="background: url('{{ asset('bg.jpg') }}') no-repeat center center; background-size: cover; min-height:100vh">
             {{ $slot }}
         </main>
     </main>
