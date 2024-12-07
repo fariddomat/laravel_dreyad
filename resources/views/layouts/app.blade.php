@@ -68,7 +68,10 @@
         a,
         button,
         input,
-        textarea {
+        textarea,
+        li,
+        td,
+        th {
             font-family: 'Cairo', sans-serif !important;
         }
 
@@ -84,19 +87,55 @@
             font-weight: 400;
             /* عادي */
         }
+
         .bg-gradient-primary {
-  background-image: linear-gradient(195deg, #38fbbb 0%, #561BD8 100%) !important;
-}
-.bg-white {
-  --bs-bg-opacity: 1;
-  background-color: rgba(255, 255, 255, 0.55) !important;
-}
+            background-image: linear-gradient(195deg, #38fbbb 0%, #561BD8 100%) !important;
+        }
+
+        .bg-white {
+            --bs-bg-opacity: 1;
+            background-color: rgba(255, 255, 255, 0.55) !important;
+        }
+
+        .card {
+            padding: 1rem !important;
+        }
+
+        select {
+            direction: ltr !important;
+        }
+
+        .bg-gradient-primary>.text-white {
+            color: #212122 !important;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
     </style>
+<style>
+    #preloader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #ffffff;
+        z-index: 9999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
 
     @yield('styles')
 </head>
 
 <body class="g-sidenav-show bg-gray-200 }}">
+    <div id="preloader" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #ffffff; z-index: 9999; display: flex; justify-content: center; align-items: center;">
+        <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
     @include('components.navbars.sidebar')
     <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg overflow-x-hidden">
         @include('layouts.navigation')
@@ -113,7 +152,8 @@
         @endif
 
         <!-- Page Content -->
-        <main style="background: url('{{ asset('bg.jpg') }}') no-repeat center center; background-size: cover; min-height:100vh">
+        <main
+            style="background: url('{{ asset('bg.jpg') }}') no-repeat center center; background-size: cover; min-height:100vh">
             {{ $slot }}
         </main>
     </main>
@@ -137,6 +177,15 @@
 <script async defer src="https://buttons.github.io/buttons.js"></script>
 <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
 <script src="{{ asset('assets') }}/js/material-dashboard.min.js?v=3.0.0"></script>
-@yield('scripts')
 
+
+@yield('scripts')
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var preloader = document.getElementById('preloader');
+        window.addEventListener('load', function() {
+            preloader.style.display = 'none';
+        });
+    });
+</script>
 </html>
