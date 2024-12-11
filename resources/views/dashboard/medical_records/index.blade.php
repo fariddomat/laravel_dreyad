@@ -133,7 +133,7 @@
                                     @foreach ($medicalRecords as $medicalRecord)
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $medicalRecord->patient->name }}</td>
+                                            <td>{{ $medicalRecord->patient?->name }}</td>
                                             <td>{{ $medicalRecord->service }}</td>
                                             <td>{{ $medicalRecord->teeth_no }}</td>
                                             <td>{{ $medicalRecord->visits_no }}</td>

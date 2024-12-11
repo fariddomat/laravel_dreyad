@@ -7,6 +7,7 @@ use App\Http\Controllers\Dashboard\MedicalRecordController;
 use App\Http\Controllers\Dashboard\PatientController;
 use App\Http\Controllers\Dashboard\PaymentController;
 use App\Http\Controllers\Dashboard\ServiceController;
+use App\Http\Controllers\Dashboard\StatisticController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Artisan;
@@ -64,6 +65,9 @@ Route::middleware(['auth'])->prefix('dashboard')->name('dashboard.')->group(func
     Route::post('/import-patients', [ImportController::class, 'importPatients'])->name('import.patients');
 
     Route::resource('services', ServiceController::class);
+    Route::get('/statistics', [StatisticController::class, 'index'])->name('statistics');
+    Route::get('/statistics/show', [StatisticController::class, 'show'])->name('statistics.show');
+
     // suggestion
 });
 

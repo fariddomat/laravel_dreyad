@@ -58,6 +58,7 @@ class PatientController extends Controller
 
     public function destroy(Patient $patient)
     {
+        $patient->medicalRecords()->delete();
         $patient->delete();
         return redirect()->route('dashboard.patients.index')->with('success', 'تم حذف المريض بنجاح');
     }

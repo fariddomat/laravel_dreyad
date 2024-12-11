@@ -46,6 +46,7 @@
     </style>
     <!-- Font Awesome Icons -->
     <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+
     <!-- Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
     <!-- CSS Files -->
@@ -124,8 +125,44 @@
         justify-content: center;
         align-items: center;
     }
-</style>
 
+    @media (max-width: 1199.98px) {
+    .g-sidenav-show.rtl .sidenav {
+        transform: translateX(7.125rem);
+    }
+
+    .g-sidenav-show:not(.rtl) .sidenav {
+        /* transform: translateX(-1.125rem); */
+    }
+
+    .sidenav {
+        transition: transform 0.3s ease-in-out;
+    }
+}
+#iconSidenav{
+    right: 0 !important;
+  left: auto !important;
+}
+
+</style>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+    const iconSidenav = document.getElementById("iconSidenav");
+    const sidenav = document.getElementById("sidenav-main");
+    const body = document.body;
+
+    if (iconSidenav) {
+        iconSidenav.addEventListener("click", function() {
+            if (body.classList.contains("g-sidenav-show")) {
+                body.classList.remove("g-sidenav-show");
+            } else {
+                body.classList.add("g-sidenav-show");
+            }
+        });
+    }
+});
+
+</script>
     @yield('styles')
 </head>
 
