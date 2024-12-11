@@ -55,46 +55,6 @@
                 ]
             });
 
-            function filterByDate(startDate, endDate) {
-                $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-                    var date = moment(data[11], 'YYYY-MM-DD H:mm:ss'); // Assuming created_at is in the 12th column
-                    if (
-                        (!startDate && !endDate) ||
-                        (!startDate && date.isBefore(endDate)) ||
-                        (!endDate && date.isAfter(startDate)) ||
-                        (date.isBetween(startDate, endDate))
-                    ) {
-                        return true;
-                    }
-                    return false;
-                });
-                table.draw();
-                $.fn.dataTable.ext.search.pop();
-            }
-
-            $('#filter-today').click(function() {
-                var today = moment().startOf('day');
-                filterByDate(today, moment().endOf('day'));
-            });
-
-            $('#filter-yesterday').click(function() {
-                var yesterday = moment().subtract(1, 'days').startOf('day');
-                filterByDate(yesterday, yesterday.endOf('day'));
-            });
-
-            $('#filter-week').click(function() {
-                var startOfWeek = moment().startOf('isoWeek');
-                filterByDate(startOfWeek, moment().endOf('day'));
-            });
-
-            $('#filter-month').click(function() {
-                var startOfMonth = moment().startOf('month');
-                filterByDate(startOfMonth, moment().endOf('day'));
-            });
-
-            $('#filter-all').click(function() {
-                filterByDate(null, null);
-            });
         });
     </script>
 
@@ -119,36 +79,29 @@
                             <table id="Table" class="table align-items-center mb-0">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
-                                        <th>رقم الملف</th>
+                                        {{-- <th>#</th> --}}
                                         <th>اسم المريض</th>
-                                        <th>الجنس</th>
-                                        <th>مستوى المريض</th>
-                                        <th>تاريخ التواصل</th>
+                                        <th>رقم الملف</th>
                                         <th>الإجراءات</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($patients as $patient)
                                         <tr>
-                                            <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $patient->file_number }}</td>
+                                            {{-- <td>{{ $loop->iteration }}</td> --}}
                                             <td>{{ $patient->name }}</td>
-                                            <td>{{ $patient->gender == 'male' ? 'ذكر' : 'أنثى' }}</td>
-                                            <td>{{ $patient->level == 'vip' ? 'VIP' : ($patient->level == 'junk' ? 'غير هام' : 'عادي') }}
-                                            </td>
-                                            <td>{{ $patient->date_contacted ?? 'غير محدد' }}</td>
+                                            <td>{{ $patient->file_number }}</td>
 
                                             <td>
+                                                <a href="{{ route('dashboard.patients.show', $patient) }}"
+                                                    class="btn btn-primary text-white">
+                                                    <i class="material-icons">visibility</i>
+                                                </a>
                                                 <a href="{{ route('dashboard.payments.user', $patient->id) }}" class="btn btn-info text-white">
                                                     <i class="material-icons">payments</i> عرض الدفعات
                                                 </a>
                                                 <a href="{{ route('dashboard.medical_records.user', $patient->id) }}" class="btn btn-info text-white">
                                                     <i class="material-icons">bookmark</i> السجلات الطبية
-                                                </a>
-                                                <a href="{{ route('dashboard.patients.show', $patient) }}"
-                                                    class="btn btn-primary text-white">
-                                                    <i class="material-icons">visibility</i>
                                                 </a>
                                                 <a href="{{ route('dashboard.patients.edit', $patient) }}"
                                                     class="btn btn-success text-white">
