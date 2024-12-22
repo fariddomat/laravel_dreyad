@@ -73,6 +73,31 @@
                     </div>
                 </div>
 
+                <!-- جدول الإحصائيات حسب السنة -->
+                <div class="table-responsive mt-5">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>السنة</th>
+                                <th>عدد المرضى</th>
+                                <th>عدد السجلات الطبية</th>
+                                <th>إجمالي المدفوعات</th>
+                                <th>إجمالي المدفوعات للسجلات الطبية</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($yearlyStatistics as $yearKey => $data)
+                                <tr>
+                                    <td>{{ $yearKey }}</td>
+                                    <td>{{ $data['patients_count'] }}</td>
+                                    <td>{{ $data['medical_records_count'] }}</td>
+                                    <td>{{ number_format($data['total_payments'], 2) }} $</td>
+                                    <td>{{ number_format($data['total_medical_record_payments'], 2) }} $</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

@@ -143,6 +143,17 @@
                         </div>
                     @endif
 
+                    @if ($patient->date_contacted)
+                        <div class="col-md-6 mb-4">
+                            <div class="card shadow-sm border-radius-lg">
+                                <div class="card-body">
+                                    <h6 class="text-primary fw-bold">تاريخ التواصل</h6>
+                                    <p>{{ $patient->date_contacted }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
                     @if ($patient->gender)
                         <div class="col-md-6 mb-4">
                             <div class="card shadow-sm border-radius-lg">

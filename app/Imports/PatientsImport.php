@@ -4,77 +4,111 @@ namespace App\Imports;
 
 use App\Models\MedicalRecord;
 use App\Models\Patient;
+use Illuminate\Validation\Rule;
+use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\ToCollection;
+use Illuminate\Support\Facades\DB;
 
 class PatientsImport implements ToCollection
 {
+
     /**
-     * Convert Excel serial date to MySQL date format.
+     * Convert various date formats to MySQL date format.
      *
-     * @param mixed $serialDate
+     * @param mixed $date
      * @return string|null
      */
-    public function convertExcelDateToMySQLDate($serialDate)
+    function convertExcelDateToMySQLDate($date)
     {
-        if (is_numeric($serialDate)) {
-            $date = \DateTime::createFromFormat('Y-m-d', '1899-12-30')->modify("+{$serialDate} days");
-            return $date->format('Y-m-d');
+        // Handle Excel serial date (numeric format)
+        if (is_numeric($date)) {
+            $baseDate = \DateTime::createFromFormat('Y-m-d', '1899-12-30');
+            if ($baseDate) {
+                $date = $baseDate->modify("+{$date} days");
+                return $date->format('Y-m-d'); // Format to MySQL DATE
+            }
         }
 
-        if (\DateTime::createFromFormat('Y-m-d', $serialDate)) {
-            return $serialDate;
+        // Replace `\` with `/` for consistent delimiter handling
+        if (is_string($date)) {
+            $date = str_replace('\\', '/', $date);
         }
 
-        return null;
+        // List of possible date formats (flexible parsing)
+        $possibleFormats = [
+            'd/m/Y',
+            'd/m/y',   // Day/Month/Year
+            'j/n/Y',
+            'j/n/y',   // Single-digit day/month
+            'Y-m-d',            // ISO format
+        ];
+
+        // Attempt to parse the date using each format
+        foreach ($possibleFormats as $format) {
+            $parsedDate = \DateTime::createFromFormat($format, $date);
+            if ($parsedDate && $parsedDate->format($format) === $date) {
+                return $parsedDate->format('Y-m-d'); // Convert to MySQL DATE format
+            }
+        }
+
+        // Log invalid date for debugging
+        \Log::warning("Invalid date format: {$date}");
+
+        return null; // Return null if no valid format is matched
     }
+
 
     public function collection(Collection $rows)
     {
-        DB::beginTransaction();
+        $currentPatientId = null;
 
+        DB::beginTransaction();
         try {
             foreach ($rows as $index => $row) {
-                // Skip header row or empty rows
-                if ($index === 0 || collect($row)->filter()->isEmpty()) {
+                // Skip header row
+                if (collect($row)->filter()->isEmpty()) {
+                    // If all values are null, break out of the loop
+                    break;
+                }
+                if ($index === 0) {
                     continue;
                 }
 
-                try {
-                    $fileNo = $row[1];
-                    $name = $row[2];
-                    $gender = $row[3];
-                    $mob1 = $row[4];
-                    $mob2 = $row[5];
-                    $service = $row[6];
-                    $teethNo = $row[7];
-                    $visitsNo = $row[8];
-                    $dateContacted = $row[9];
-                    $dateStart = $row[10];
-                    $dateEnd = $row[11];
-                    $source = $row[12];
-                    $totalCost = $row[13];
-                    $discount = $row[14];
-                    $treatmentPlan = $row[15];
-                    $level = $row[16];
-                    $status = $row[17];
-                    $pricing = $row[18];
-                    $followUp = $row[19];
-                    $outcome = $row[20];
-                    $financialStatus = $row[21];
-                    $amountPaid = $row[22];
-                    $notes = $row[23];
+                // Map Excel fields to database fields
+                $fileNo = $row[1];
+                $name = $row[2];
+                $gender = $row[3];
+                $mob1 = $row[4];
+                $mob2 = $row[5];
+                $service = $row[6];
+                $teethNo = $row[7];
+                $visitsNo = $row[8];
+                $dateContacted = $row[9];
+                $dateStart = $row[10];
+                $dateEnd = $row[11];
+                $source = $row[12];
+                $totalCost = $row[13];
+                $discount = $row[14];
+                $treatmentPlan = $row[15];
+                $level = $row[16];
+                $status = $row[17];
+                $pricing = $row[18];
+                $followUp = $row[19];
+                $outcome = $row[20];
+                $financialStatus = $row[21];
+                $amountPaid = $row[22];
+                $notes = $row[23];
 
-                    // Skip if patient data is null
-                    if (is_null($name) && is_null($mob1)) {
-                        continue;
-                    }
 
-                    // Create or fetch patient
+
+                // If patient data is not null, check or create patient
+                if (!is_null($name)) {
                     $patient = Patient::firstOrCreate(
-                        ['file_number' => $fileNo ?? (string) \Illuminate\Support\Str::uuid()],
+                        [
+                            'file_number' => $fileNo ?? (string) \Illuminate\Support\Str::uuid(),
+                        ],
                         [
                             'name' => $name,
                             'gender' => $gender,
@@ -82,16 +116,23 @@ class PatientsImport implements ToCollection
                             'mob2' => $mob2,
                             'source' => $source,
                             'notes' => $notes,
+
+                            'date_contacted' => $this->convertExcelDateToMySQLDate($dateContacted) ?? $this->convertExcelDateToMySQLDate($dateStart),
+
+                            // Add other patient fields as needed
                         ]
                     );
 
-                    // Create medical record for the patient
+                    $currentPatientId = $patient->id;
+                }
+
+                // Create medical record for the current patient
+                if ($currentPatientId) {
                     MedicalRecord::create([
-                        'patient_id' => $patient->id,
+                        'patient_id' => $currentPatientId,
                         'service' => $service,
                         'teeth_no' => $teethNo,
                         'visits_no' => $visitsNo,
-                        'date_contacted' => $this->convertExcelDateToMySQLDate($dateContacted),
                         'date_start' => $this->convertExcelDateToMySQLDate($dateStart),
                         'date_end' => $this->convertExcelDateToMySQLDate($dateEnd),
                         'total_cost' => $totalCost,
@@ -104,23 +145,22 @@ class PatientsImport implements ToCollection
                         'outcome' => $outcome,
                         'financial_status' => $financialStatus,
                         'amount_paid' => $amountPaid,
+                        // Add other medical record fields as needed
                     ]);
-                } catch (\Exception $e) {
-                    // Log the error for the problematic row and continue
-                    Log::error("Error processing row $index: " . $e->getMessage());
-                    continue;
                 }
             }
-
             DB::commit();
 
-            return response()->json(['message' => 'Import completed successfully, with some rows skipped due to errors.']);
+            return response()->json(['message' => 'Import completed successfully!']);
         } catch (\Exception $e) {
+            // Rollback the transaction if something goes wrong
             DB::rollBack();
 
-            Log::error('Import failed: ' . $e->getMessage());
+            // Log the error for debugging
+            \Log::error('Import failed: ' . $e->getMessage());
 
-            return response()->json(['error' => 'Import failed! Please check the logs for details.']);
+            // Return an error message to the user
+            return response()->json(['error' => 'Import failed! Please try again.']);
         }
     }
 }

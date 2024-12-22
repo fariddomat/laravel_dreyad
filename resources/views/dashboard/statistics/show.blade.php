@@ -7,18 +7,8 @@
                 </div>
             </div>
             <div class="card-body my-4 mx-md-4 mt-n6">
-                {{-- <form method="GET" action="{{ route('dashboard.statistics.show') }}">
+                <form method="GET" action="{{ route('dashboard.statistics.show') }}">
                     <div class="row">
-                        <div class="col-md-4">
-                            <label for="month" class="form-label">الشهر</label>
-                            <select name="month" id="month" class="form-control">
-                                @foreach(range(1, 12) as $m)
-                                    <option value="{{ $m }}" {{ $m == $month ? 'selected' : '' }}>
-                                        {{ \Carbon\Carbon::create()->month($m)->format('F') }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
                         <div class="col-md-4">
                             <label for="year" class="form-label">السنة</label>
                             <select name="year" id="year" class="form-control">
@@ -33,7 +23,7 @@
                             <button type="submit" class="btn btn-primary">فلترة</button>
                         </div>
                     </div>
-                </form> --}}
+                </form>
 
                 <div class="table-responsive mt-4">
                     <table class="table table-bordered">
@@ -47,19 +37,19 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- First row - All months totals -->
+                            <!-- Total for the year -->
                             <tr>
                                 <td><strong>الإجمالي الكلي</strong></td>
-                                <td>{{ array_sum(array_column($allMonthsData, 'patients_count')) }}</td>
-                                <td>{{ array_sum(array_column($allMonthsData, 'medical_records_count')) }}</td>
-                                <td>{{ number_format(array_sum(array_column($allMonthsData, 'total_payments')), 2) }}</td>
-                                <td>{{ number_format(array_sum(array_column($allMonthsData, 'total_medical_record_payments')), 2) }}</td>
+                                <td>{{ array_sum(array_column($statistics, 'patients_count')) }}</td>
+                                <td>{{ array_sum(array_column($statistics, 'medical_records_count')) }}</td>
+                                <td>{{ number_format(array_sum(array_column($statistics, 'total_payments')), 2) }}</td>
+                                <td>{{ number_format(array_sum(array_column($statistics, 'total_medical_record_payments')), 2) }}</td>
                             </tr>
 
-                            <!-- Other rows for specific months -->
-                            @foreach ($allMonthsData as $monthKey => $data)
+                            <!-- Monthly data -->
+                            @foreach ($statistics as $monthKey => $data)
                                 <tr>
-                                    <td>{{ \Carbon\Carbon::create()->month($monthKey)->format('F') }}</td>
+                                    <td>{{ \Carbon\Carbon::create()->month($monthKey)->translatedFormat('F') }}</td>
                                     <td>{{ $data['patients_count'] }}</td>
                                     <td>{{ $data['medical_records_count'] }}</td>
                                     <td>{{ number_format($data['total_payments'], 2) }}</td>
@@ -71,8 +61,8 @@
                 </div>
 
                 <div class="mt-4">
-                    <a href="{{ route('dashboard.statistics', ['month' => $month, 'year' => $year, 'export' => 'excel']) }}" class="btn btn-success">تصدير إلى Excel</a>
-                    <a href="{{ route('dashboard.statistics', ['month' => $month, 'year' => $year, 'export' => 'pdf']) }}" class="btn btn-danger">تصدير إلى PDF</a>
+                    <a href="{{ route('dashboard.statistics.show', ['year' => $year, 'export' => 'excel']) }}" class="btn btn-success">تصدير إلى Excel</a>
+                    <a href="{{ route('dashboard.statistics.show', ['year' => $year, 'export' => 'pdf']) }}" class="btn btn-danger">تصدير إلى PDF</a>
                 </div>
             </div>
         </div>
