@@ -72,30 +72,24 @@
                 $.fn.dataTable.ext.search.pop();
             }
 
-            $('#filter-today').click(function() {
-                var today = moment().startOf('day');
-                filterByDate(today, moment().endOf('day'));
-            });
 
-            $('#filter-yesterday').click(function() {
-                var yesterday = moment().subtract(1, 'days').startOf('day');
-                filterByDate(yesterday, yesterday.endOf('day'));
-            });
 
-            $('#filter-week').click(function() {
-                var startOfWeek = moment().startOf('isoWeek');
-                filterByDate(startOfWeek, moment().endOf('day'));
-            });
+        $('#apply-filters').on('click', function () {
+    let service = $('#filter-service').val();
+    let dateStart = $('#filter-date-start').val();
+    let status = $('#filter-status').val();
+    let financialStatus = $('#filter-financial-status').val();
 
-            $('#filter-month').click(function() {
-                var startOfMonth = moment().startOf('month');
-                filterByDate(startOfMonth, moment().endOf('day'));
-            });
+    let queryParams = new URLSearchParams({
+        service: service,
+        date_start: dateStart,
+        status: status,
+        financial_status: financialStatus
+    }).toString();
 
-            $('#filter-all').click(function() {
-                filterByDate(null, null);
-            });
-        });
+    window.location.href = `?${queryParams}`;
+});
+
     </script>
 
 @endsection
@@ -113,6 +107,42 @@
                                     <i class="material-icons text-sm">add</i>&nbsp;&nbsp;إضافة سجل طبي
                                 </a>
                             </div>
+                            <div class="row mb-3 mt-2">
+                                <div class="col-md-2">
+                                    <select name="service" id="filter-service" class="form-control">
+                                        <option value="">كل الخدمات</option>
+                                        @foreach ($services as $service)
+                                            <option value="{{ $service }}">{{ $service }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="date" name="date_start" id="filter-date-start" class="form-control" placeholder="Start Date">
+                                </div>
+                                <div class="col-md-2">
+                                    <select name="status" id="filter-status" class="form-control">
+                                        <option value="">الحالات</option>
+                                        @foreach ($statuses as $status)
+                                            <option value="{{ $status }}">{{ $status }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <select name="financial_status" id="filter-financial-status" class="form-control">
+                                        <option value="">الحالة المالية</option>
+                                        @foreach ($financialStatuses as $financialStatus)
+                                            <option value="{{ $financialStatus }}">{{ $financialStatus }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <button id="apply-filters" class="btn btn-primary">فلترة</button>
+                                </div>
+                                <div class="col-md-2 text-end">
+                                    <a href="{{ route('dashboard.medical_records.export') }}" class="btn btn-success">Export to Excel</a>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                     <div class="card-body px-0 pb-2">

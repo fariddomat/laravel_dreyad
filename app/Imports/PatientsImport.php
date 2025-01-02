@@ -15,6 +15,17 @@ class PatientsImport implements ToCollection
 {
 
     /**
+     * Clean a field to remove non-numeric characters.
+     *
+     * @param string|null $field
+     * @return string|null
+     */
+    private function cleanNumberField(?string $field): ?string
+    {
+        return $field ? preg_replace('/\D/', '', $field) : '0';
+    }
+
+    /**
      * Convert various date formats to MySQL date format.
      *
      * @param mixed $date
@@ -54,9 +65,9 @@ class PatientsImport implements ToCollection
         }
 
         // Log invalid date for debugging
-        \Log::warning("Invalid date format: {$date}");
+        // \Log::warning("Invalid date format: {$date}");
 
-        return null; // Return null if no valid format is matched
+        return '2025-01-01'; // Return null if no valid format is matched
     }
 
 
@@ -89,16 +100,16 @@ class PatientsImport implements ToCollection
                 $dateStart = $row[10];
                 $dateEnd = $row[11];
                 $source = $row[12];
-                $totalCost = $row[13];
+                $totalCost = $this->cleanNumberField($row[13]);
                 $discount = $row[14];
                 $treatmentPlan = $row[15];
                 $level = $row[16];
                 $status = $row[17];
-                $pricing = $row[18];
+                $pricing = is_numeric($this->cleanNumberField($row[18])) ? (int) $this->cleanNumberField($row[18]) : 0;
                 $followUp = $row[19];
                 $outcome = $row[20];
                 $financialStatus = $row[21];
-                $amountPaid = $row[22];
+                $amountPaid = $this->cleanNumberField($row[22]);
                 $notes = $row[23];
 
 

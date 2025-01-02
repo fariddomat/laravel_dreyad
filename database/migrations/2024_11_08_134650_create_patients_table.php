@@ -15,12 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('file_number')->unique(); // رقم الملف
             $table->string('name'); // اسم المريض
-            $table->enum('gender', ['male', 'female']); // الجنس
+            $table->string('gender')->nullable(); // الجنس
             $table->string('mob1')->nullable(); // رقم الجوال الأول
             $table->string('mob2')->nullable(); // رقم الجوال الثاني
             $table->date('date_contacted')->nullable(); // تاريخ التواصل
             $table->string('source')->nullable(); // المصدر
-            $table->enum('level', ['junk', 'vip', 'normal'])->default('normal'); // مستوى المريض
+            $table->string('level')->default('normal'); // مستوى المريض
             $table->text('notes')->nullable(); // ملاحظات
             $table->timestamps();
         });

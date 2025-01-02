@@ -10,11 +10,78 @@ use Illuminate\Http\Request;
 
 class MedicalRecordController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $medicalRecords = MedicalRecord::with('patient')->get();
-        return view('dashboard.medical_records.index', compact('medicalRecords'));
+        $query = MedicalRecord::query()->with('patient:id,name');
+
+        // Apply filters if provided
+        if ($request->filled('service')) {
+            $query->where('service', $request->service);
+        }
+
+        if ($request->filled('date_start')) {
+            $query->whereDate('date_start', $request->date_start);
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('financial_status')) {
+            $query->where('financial_status', $request->financial_status);
+        }
+
+        $medicalRecords = $query->get();
+
+        $services = MedicalRecord::select('service')->distinct()->pluck('service');
+        $statuses = MedicalRecord::select('status')->distinct()->pluck('status');
+        $financialStatuses = MedicalRecord::select('financial_status')->distinct()->pluck('financial_status');
+
+        return view('dashboard.medical_records.index', compact('medicalRecords', 'services', 'statuses', 'financialStatuses'));
     }
+
+    // Export filtered data to Excel
+    public function export(Request $request)
+    {
+        $query = MedicalRecord::query()->with('patient');
+
+        // Apply filters as in the index method
+        if ($request->filled('service')) {
+            $query->where('service', $request->service);
+        }
+
+        if ($request->filled('date_start')) {
+            $query->whereDate('date_start', $request->date_start);
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('financial_status')) {
+            $query->where('financial_status', $request->financial_status);
+        }
+
+        $medicalRecords = $query->get();
+
+        // Prepare data for export
+        $data = $medicalRecords->map(function ($record) {
+            return [
+                'Patient Name' => $record->patient?->name,
+                'Mobile 1' => $record->patient?->mob1,
+                'Mobile 2' => $record->patient?->mob2,
+                'Service' => $record->service,
+                'Teeth No' => $record->teeth_no,
+                'Date Start' => $record->date_start,
+                'Status' => $record->status,
+                'Financial Status' => $record->financial_status,
+            ];
+        });
+
+        // Export as Excel
+        return \Excel::download(new \App\Exports\MedicalRecordsExport($data), 'medical_records.xlsx');
+    }
+
     public function patient($id)
     {
 

@@ -57,6 +57,7 @@ Route::middleware(['auth'])->prefix('dashboard')->name('dashboard.')->group(func
     Route::resource('patients', PatientController::class);
     Route::resource('medical_records', MedicalRecordController::class);
     Route::get('/medical_records/user/{id}', [MedicalRecordController::class, 'patient'])->name('medical_records.user');
+    Route::get('/medical-records/export', [MedicalRecordController::class, 'export'])->name('medical_records.export');
 
     Route::resource('payments', PaymentController::class);
     Route::get('/payments/user/{id}', [PaymentController::class, 'userPayments'])->name('payments.user');
