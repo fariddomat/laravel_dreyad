@@ -11,7 +11,6 @@
     </style>
 @endsection
 @section('scripts')
-
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.datatables.net/v/bs5/dt-2.0.3/b-3.0.1/r-3.0.1/rr-1.5.0/datatables.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js" defer></script>
@@ -19,79 +18,78 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script src="https://cdn.datatables.net/plug-ins/1.11.5/filtering/row-based/range_dates.js"></script>
     <script
-    src="https://cdn.datatables.net/v/bs5/jszip-3.10.1/dt-2.0.3/b-3.0.1/b-colvis-3.0.1/b-html5-3.0.1/b-print-3.0.1/r-3.0.1/rr-1.5.0/datatables.min.js"
-    defer></script>
+        src="https://cdn.datatables.net/v/bs5/jszip-3.10.1/dt-2.0.3/b-3.0.1/b-colvis-3.0.1/b-html5-3.0.1/b-print-3.0.1/r-3.0.1/rr-1.5.0/datatables.min.js"
+        defer></script>
 
     <script defer>
         $(document).ready(function() {
-            var table = $('#Table').DataTable({
-                responsive: true,
-                searching: true,
-                paging: true,
-                info: true,
-                sorting: true,
-                pageLength: 25, // Sets the default number of records per page
-                language: {
-                    url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/ar.json', // Correct URL
-                },
-                dom: 'Bfrtip',
-                buttons: [
-                    {
-                        extend: 'print',
-                        exportOptions: {
-                            columns: ':not(:last-child)'
-                        }
-                    },
-                    {
-                        extend: 'excelHtml5',
-                        exportOptions: {
-                            columns: ':not(:last-child)'
+                    var table = $('#Table').DataTable({
+                        responsive: true,
+                        searching: true,
+                        paging: false,
+                        info: true,
+                        sorting: true,
+                        pageLength: 25, // Sets the default number of records per page
+                        language: {
+                            url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/ar.json', // Correct URL
                         },
-                        customize: function(xlsx) {
-                            var sheet = xlsx.xl.worksheets['sheet1.xml'];
-                            $('sheet', sheet).attr('rightToLeft', 'true');
-                        }
-                    }
-                ]
-            });
+                        dom: 'Bfrtip',
+                        buttons: [{
+                                extend: 'print',
+                                exportOptions: {
+                                    columns: ':not(:last-child)'
+                                }
+                            },
+                            {
+                                extend: 'excelHtml5',
+                                exportOptions: {
+                                    columns: ':not(:last-child)'
+                                },
+                                customize: function(xlsx) {
+                                    var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                                    $('sheet', sheet).attr('rightToLeft', 'true');
+                                }
+                            }
+                        ]
+                    });
 
-            function filterByDate(startDate, endDate) {
-                $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-                    var date = moment(data[11], 'YYYY-MM-DD H:mm:ss'); // Assuming created_at is in the 12th column
-                    if (
-                        (!startDate && !endDate) ||
-                        (!startDate && date.isBefore(endDate)) ||
-                        (!endDate && date.isAfter(startDate)) ||
-                        (date.isBetween(startDate, endDate))
-                    ) {
-                        return true;
+                    function filterByDate(startDate, endDate) {
+                        $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+                            var date = moment(data[11],
+                            'YYYY-MM-DD H:mm:ss'); // Assuming created_at is in the 12th column
+                            if (
+                                (!startDate && !endDate) ||
+                                (!startDate && date.isBefore(endDate)) ||
+                                (!endDate && date.isAfter(startDate)) ||
+                                (date.isBetween(startDate, endDate))
+                            ) {
+                                return true;
+                            }
+                            return false;
+                        });
+                        table.draw();
+                        $.fn.dataTable.ext.search.pop();
                     }
-                    return false;
+
+
+
+                    $('#apply-filters').on('click', function() {
+                        let service = $('#filter-service').val();
+                        let dateStart = $('#filter-date-start').val();
+                        let status = $('#filter-status').val();
+                        let financialStatus = $('#filter-financial-status').val();
+
+                        let queryParams = new URLSearchParams({
+                            service: service,
+                            date_start: dateStart,
+                            status: status,
+                            financial_status: financialStatus
+                        }).toString();
+
+                        window.location.href = `?${queryParams}`;
+                    });
                 });
-                table.draw();
-                $.fn.dataTable.ext.search.pop();
-            }
-
-
-
-        $('#apply-filters').on('click', function () {
-    let service = $('#filter-service').val();
-    let dateStart = $('#filter-date-start').val();
-    let status = $('#filter-status').val();
-    let financialStatus = $('#filter-financial-status').val();
-
-    let queryParams = new URLSearchParams({
-        service: service,
-        date_start: dateStart,
-        status: status,
-        financial_status: financialStatus
-    }).toString();
-
-    window.location.href = `?${queryParams}`;
-});
-
     </script>
-
 @endsection
 <x-app-layout>
     <div class="container-fluid py-4">
@@ -117,7 +115,8 @@
                                     </select>
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="date" name="date_start" id="filter-date-start" class="form-control" placeholder="Start Date">
+                                    <input type="date" name="date_start" id="filter-date-start" class="form-control"
+                                        placeholder="Start Date">
                                 </div>
                                 <div class="col-md-2">
                                     <select name="status" id="filter-status" class="form-control">
@@ -139,7 +138,8 @@
                                     <button id="apply-filters" class="btn btn-primary">فلترة</button>
                                 </div>
                                 <div class="col-md-2 text-end">
-                                    <a href="{{ route('dashboard.medical_records.export') }}" class="btn btn-success">Export to Excel</a>
+                                    <a href="{{ route('dashboard.medical_records.export') }}"
+                                        class="btn btn-success">Export to Excel</a>
                                 </div>
                             </div>
 
@@ -193,6 +193,9 @@
                                 </tbody>
                             </table>
 
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            {{ $medicalRecords->links() }}
                         </div>
                     </div>
                 </div>

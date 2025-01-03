@@ -56,7 +56,7 @@
                         <div class="card">
                             <div class="card-header">إجمالي المدفوعات</div>
                             <div class="card-body">
-                                <h3>{{ number_format($totalPayments, 2) }} $</h3>
+                                <h3>{{ number_format($totalPayments, 2) }} SAR</h3>
                             </div>
                         </div>
                     </div>
@@ -67,7 +67,7 @@
                         <div class="card">
                             <div class="card-header">إجمالي المدفوعات للسجلات الطبية</div>
                             <div class="card-body">
-                                <h3>{{ number_format($totalMedicalRecordPayments, 2) }} $</h3>
+                                <h3>{{ number_format($totalMedicalRecordPayments, 2) }} SAR</h3>
                             </div>
                         </div>
                     </div>
@@ -91,8 +91,8 @@
                                     <td>{{ $yearKey }}</td>
                                     <td>{{ $data['patients_count'] }}</td>
                                     <td>{{ $data['medical_records_count'] }}</td>
-                                    <td>{{ number_format($data['total_payments'], 2) }} $</td>
-                                    <td>{{ number_format($data['total_medical_record_payments'], 2) }} $</td>
+                                    <td>{{ number_format($data['total_payments'], 2) }} SAR</td>
+                                    <td>{{ number_format($data['total_medical_record_payments'], 2) }} SAR</td>
                                 </tr>
                             @endforeach
                         </tbody>

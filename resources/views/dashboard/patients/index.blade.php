@@ -26,11 +26,10 @@
         $(document).ready(function() {
             var table = $('#Table').DataTable({
                 responsive: true,
-                searching: true,
-                paging: true,
+                searching: false,
+                paging: false,
                 info: true,
                 sorting: true,
-                pageLength: 25, // Sets the default number of records per page
                 language: {
                     url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/ar.json', // Correct URL
                 },
@@ -57,6 +56,47 @@
 
         });
     </script>
+<script>
+    $(document).ready(function () {
+        const searchField = $('#search');
+
+        searchField.on('keyup', function () {
+            const query = $(this).val();
+
+            $.ajax({
+                url: "{{ route('dashboard.patients.index') }}",
+                method: "GET",
+                data: { search: query },
+                beforeSend: function () {
+                    $('#patientTable').html('<p class="text-center">جاري التحميل...</p>');
+                },
+                success: function (response) {
+                    $('#patientTable').html(response.html);
+                },
+                error: function () {
+                    alert('حدث خطأ أثناء البحث.');
+                }
+            });
+        });
+
+        // Handle pagination clicks
+        $(document).on('click', '.pagination a', function (event) {
+            event.preventDefault();
+
+            const url = $(this).attr('href');
+
+            $.ajax({
+                url: url,
+                success: function (response) {
+                    $('#patientTable').html(response.html);
+                },
+                error: function () {
+                    alert('حدث خطأ أثناء التحميل.');
+                }
+            });
+        });
+    });
+</script>
 
 @endsection
 <x-app-layout>
@@ -75,51 +115,11 @@
                         </div>
                     </div>
                     <div class="card-body px-0 pb-2">
-                        <div class="table-responsive p-0">
-                            <table id="Table" class="table align-items-center mb-0">
-                                <thead>
-                                    <tr>
-                                        {{-- <th>#</th> --}}
-                                        <th>اسم المريض</th>
-                                        <th>رقم الملف</th>
-                                        <th>الإجراءات</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($patients as $patient)
-                                        <tr>
-                                            {{-- <td>{{ $loop->iteration }}</td> --}}
-                                            <td>{{ $patient->name }}</td>
-                                            <td>{{ $patient->file_number }}</td>
-
-                                            <td>
-                                                <a href="{{ route('dashboard.patients.show', $patient) }}"
-                                                    class="btn btn-primary text-white">
-                                                    <i class="material-icons">visibility</i>
-                                                </a>
-                                                <a href="{{ route('dashboard.payments.user', $patient->id) }}" class="btn btn-info text-white">
-                                                    <i class="material-icons">payments</i> عرض الدفعات
-                                                </a>
-                                                <a href="{{ route('dashboard.medical_records.user', $patient->id) }}" class="btn btn-info text-white">
-                                                    <i class="material-icons">bookmark</i> السجلات الطبية
-                                                </a>
-                                                <a href="{{ route('dashboard.patients.edit', $patient) }}"
-                                                    class="btn btn-success text-white">
-                                                    <i class="material-icons">edit</i>
-                                                </a>
-                                                <form action="{{ route('dashboard.patients.destroy', $patient) }}"
-                                                    method="POST" style="display: inline;">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger text-white">
-                                                        <i class="material-icons">close</i>
-                                                    </button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                        <div class="p-3">
+                            <input id="search" type="text" class="form-control" placeholder="ابحث عن مريض...">
+                        </div>
+                        <div class="table-responsive p-0" id="patientTable">
+                            @include('dashboard.patients.partials.patient_table', ['patients' => $patients])
                         </div>
                     </div>
                 </div>
@@ -127,3 +127,4 @@
         </div>
     </div>
 </x-app-layout>
+

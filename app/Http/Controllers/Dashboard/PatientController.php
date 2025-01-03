@@ -8,11 +8,27 @@ use Illuminate\Http\Request;
 
 class PatientController extends Controller
 {
-    public function index()
-    {
-        $patients = Patient::all();
-        return view('dashboard.patients.index', compact('patients'));
+    public function index(Request $request)
+{
+    $query = Patient::query();
+
+    if ($request->has('search') && !empty($request->search)) {
+        $query->where('name', 'like', '%' . $request->search . '%')
+              ->orWhere('file_number', 'like', '%' . $request->search . '%');
     }
+
+    $patients = $query->paginate(25); // Paginate the results
+
+    if ($request->ajax()) {
+        return response()->json([
+            'html' => view('dashboard.patients.partials.patient_table', compact('patients'))->render(),
+            'pagination' => (string) $patients->links(),
+        ]);
+    }
+
+    return view('dashboard.patients.index', compact('patients'));
+}
+
 
     public function create()
     {

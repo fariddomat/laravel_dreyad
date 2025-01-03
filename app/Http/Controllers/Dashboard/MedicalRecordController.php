@@ -31,7 +31,7 @@ class MedicalRecordController extends Controller
             $query->where('financial_status', $request->financial_status);
         }
 
-        $medicalRecords = $query->get();
+        $medicalRecords = $query->paginate(25);
 
         $services = MedicalRecord::select('service')->distinct()->pluck('service');
         $statuses = MedicalRecord::select('status')->distinct()->pluck('status');
@@ -90,7 +90,11 @@ class MedicalRecordController extends Controller
         $medicalRecords = MedicalRecord::where('patient_id', $id)
             ->paginate(25);
 
-        return view('dashboard.medical_records.index', compact('medicalRecords'));
+            $services = MedicalRecord::select('service')->distinct()->pluck('service');
+            $statuses = MedicalRecord::select('status')->distinct()->pluck('status');
+            $financialStatuses = MedicalRecord::select('financial_status')->distinct()->pluck('financial_status');
+
+        return view('dashboard.medical_records.index', compact('medicalRecords', 'services', 'statuses','financialStatuses'));
     }
 
 
